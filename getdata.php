@@ -41,7 +41,9 @@ foreach ($res->TripPointArr as $point) {
         'stationName' =>$point->StationNm,
         'longitude' => $point->StLONGITUDE,
         'latitude' => $point->StLATITUDE,
+        'timearrpl' => $point->DtTmArrivalPl,
         'timearrft' => $point->DtTmArrivalFt,
+        'timesendpl' => $point->DtTmSendPl,
         'timesendft' => $point->DtTmSendFt
         //        'timesendft' => (new DateTime($point->DtTmSendFt))->format('Y-m-d H:i:s')
     );
