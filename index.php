@@ -6166,10 +6166,10 @@
                         let timearr = timeToMinutes(timearrString);
                         let timedep = timeToMinutes(timedepString);
                         let timestop = timedep - timearr ;
-                        content.innerHTML = '<p>Пункт:' + name + '</p>' +
-                            '<p>Время прибытия: ' + timearrString + '</p>' +
-                            '<p>Время отправки: ' + timedepString + '</p>' +
-                            '<p>Время стоянки: ' + timestop + ' минут</p>';
+                        content.innerHTML = '<p>Пункт: <span style="font-weight: bold;"> ' + name + '</span></p>' +
+                            '<p>Время прибытия: <span style="color: blue; font-weight: bold"> ' + timearrString + '</span></p>'+
+                            '<p>Время отправки: <span style="color: green; font-weight: bold"> ' + timedepString + '</span></p>' +
+                            '<p>Время стоянки: <span style="color: red; font-weight: bold">' + timestop + ' минут</span></p>';
 
                         overlay.setPosition(coordinate);
                         map.addOverlay(overlay);
