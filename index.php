@@ -34,6 +34,12 @@
             .then(async response => await response.json())
             .then(async data => {
                 data.forEach(point => {
+                    /*                    const dateTimeParts = point.timearrft.split(' ');
+                                        const dateParts = dateTimeParts[0].split('.'); // Разбиваем на день, месяц и год
+                                        // const timeParts = dateTimeParts[1].split(':');
+
+                                        // Создаем объект Date с разобранными компонентами
+                                        const date = new Date(dateParts[2], dateParts[1] - 1, dateParts[0]);*/
                     let newPoint = {
                         id: point.idstation,
                         name: point.stationName,
@@ -6155,15 +6161,26 @@
                     map.forEachFeatureAtPixel(pixel, function (feature) {
                         let coordinate = e.coordinate;
                         let name = feature.get('name');
-                        let timearr = feature.get('timearr');
-                        let timedep = feature.get('timesend');
+                        let timearrString = feature.get('timearr');
+                        let timedepString = feature.get('timesend');
+                        let timearr = timeToMinutes(timearrString);
+                        let timedep = timeToMinutes(timedepString);
+                        let timestop = timedep - timearr ;
                         content.innerHTML = '<p>Пункт:' + name + '</p>' +
-                            '<p>Время прибытия:' + timearr + '</p>' +
-                            '<p>Время отправки:' + timedep + '</p>';
+                            '<p>Время прибытия: ' + timearrString + '</p>' +
+                            '<p>Время отправки: ' + timedepString + '</p>' +
+                            '<p>Время стоянки: ' + timestop + ' минут</p>';
+
                         overlay.setPosition(coordinate);
                         map.addOverlay(overlay);
                     });
                 });
+
+                function timeToMinutes(timeString) {
+                    const [day, month,year, hours, minutes] = timeString.split(/[\s.:]+/);
+                    return parseInt(hours) * 60 + parseInt(minutes);
+                }
+
                 popupCloser.addEventListener('click', function () {
                     overlay.setPosition(undefined);
                 });
