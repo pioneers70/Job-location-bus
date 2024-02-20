@@ -6091,7 +6091,7 @@
                     layers: [
                         new ol.layer.Tile({
                             source: new ol.source.OSM(),
-                            name: 'Map'
+                            name: 'map'
                         }),
                         new ol.layer.Vector({
                             source: vectorSource,
@@ -6137,7 +6137,6 @@
                     element: container,
                     autoPan: true
                 });
-
 
                 function handleStopPixelClick(feature, e) {
                     let coordinate = e.coordinate;
