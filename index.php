@@ -9,17 +9,30 @@
 <link rel="stylesheet" href="mapstyle.css">
 
 <script src="mapscript.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"
+></script>
+
 <script>
+
 
     $(document).ready(function () {
 
         /** Координаты остановок и сами остановки ------------------------------------------------------------------ */
 
         let pointsStation = [];
-
+        Swal.fire({
+            title: 'Загрузка данных',
+            text: 'Пожалуйста ожидайте, выполняется загрузка данных о рейсе',
+            icon: 'info',
+            allowOutsideClick: false,
+            onBeforeOpen: () => {
+                Swal.showLoading();
+            }
+        })
         fetch('getdata.php')
             .then(async response => await response.json())
             .then(async data => {
+                Swal.close();
                 data.forEach(point => {
                     let newPoint = {
                         id: point.idstation,
