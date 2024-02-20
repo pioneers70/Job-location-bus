@@ -34,12 +34,6 @@
             .then(async response => await response.json())
             .then(async data => {
                 data.forEach(point => {
-                    /*                    const dateTimeParts = point.timearrft.split(' ');
-                                        const dateParts = dateTimeParts[0].split('.'); // Разбиваем на день, месяц и год
-                                        // const timeParts = dateTimeParts[1].split(':');
-
-                                        // Создаем объект Date с разобранными компонентами
-                                        const date = new Date(dateParts[2], dateParts[1] - 1, dateParts[0]);*/
                     let newPoint = {
                         id: point.idstation,
                         name: point.stationName,
@@ -5984,9 +5978,11 @@
                         });
                         busFeature.setStyle([busStyle]);
                         busFeatures.push(busFeature);
+
                     }
                     iconBusSource = new ol.source.Vector({features: busFeatures});
                 }
+
 
                 /** отрисовка иконки остановки -----------------------------------------------------------------------*/
 
@@ -6155,35 +6151,72 @@
                     autoPan: true
                 });
 
+// Функция для обработки кликов на пиксели с информацией об остановке
+                function handleStopPixelClick(feature, e) {
+                    let coordinate = e.coordinate;
+                    let name = feature.get('name');
+                    let timearrString = feature.get('timearr');
+                    let timedepString = feature.get('timesend');
+                    let timearr = timeToMinutes(timearrString);
+                    let timedep = timeToMinutes(timedepString);
+                    let timestop = timedep - timearr;
+
+                    let content = document.createElement('div');
+                    content.innerHTML = '<p>Остановка: <span style="font-weight: bold;">' + name + '</span></p>' +
+                        '<p>Время прибытия: <span style="color: blue; font-weight: bold"> ' + timearrString + '</span></p>' +
+                        '<p>Время отправки: <span style="color: green; font-weight: bold"> ' + timedepString + '</span></p>' +
+                        '<p>Время стоянки: <span style="color: red; font-weight: bold">' + timestop + ' минут</span></p>';
+
+                    overlay.setElement(content);
+                    overlay.setPosition(coordinate);
+                    map.addOverlay(overlay);
+                }
+
+// Функция для обработки кликов на пиксели с информацией об автобусе
+                function handleBusPixelClick(feature, e) {
+                    let coordinate = e.coordinate;
+                    let name = feature.get('name');
+
+                    let content = document.createElement('div');
+                    content.innerHTML = '<p>Автобус: <span style="font-weight: bold;">' + name + '</span></p>' +
+                        // Добавьте другую информацию об автобусе, если необходимо
+                        overlay.setElement(content);
+                    overlay.setPosition(coordinate);
+                    map.addOverlay(overlay);
+                }
+
+
                 map.on('click', function (e) {
                     let pixel = map.getEventPixel(e.originalEvent);
-                    console.log(pixel);
                     map.forEachFeatureAtPixel(pixel, function (feature) {
-                        let coordinate = e.coordinate;
-                        let name = feature.get('name');
-                        let timearrString = feature.get('timearr');
-                        let timedepString = feature.get('timesend');
-                        let timearr = timeToMinutes(timearrString);
-                        let timedep = timeToMinutes(timedepString);
-                        let timestop = timedep - timearr ;
-                        content.innerHTML = '<p>Пункт: <span style="font-weight: bold;"> ' + name + '</span></p>' +
-                            '<p>Время прибытия: <span style="color: blue; font-weight: bold"> ' + timearrString + '</span></p>'+
-                            '<p>Время отправки: <span style="color: green; font-weight: bold"> ' + timedepString + '</span></p>' +
-                            '<p>Время стоянки: <span style="color: red; font-weight: bold">' + timestop + ' минут</span></p>';
-
-                        overlay.setPosition(coordinate);
-                        map.addOverlay(overlay);
+                        if (feature.get('id') && feature.get('id').startsWith('bus')) {
+                            handleBusPixelClick(feature, e);
+                        } else {
+                            handleStopPixelClick(feature, e);
+                        }
                     });
                 });
-
                 function timeToMinutes(timeString) {
-                    const [day, month,year, hours, minutes] = timeString.split(/[\s.:]+/);
+                    const [day, month, year, hours, minutes] = timeString.split(/[\s.:]+/);
                     return parseInt(hours) * 60 + parseInt(minutes);
                 }
+
 
                 popupCloser.addEventListener('click', function () {
                     overlay.setPosition(undefined);
                 });
+
+/*                function handleBusMarkerClick(feature, e) {
+                    let coordinate = e.coordinate;
+                    let name = feature.get('name');
+                    // Добавьте необходимые данные для отображения
+                    let content = document.createElement('div');
+                    content.innerHTML = '<p>Автобус: <span style="font-weight: bold;">' + name + '</span></p>' +
+                        // Добавьте остальные данные
+                        overlay.setElement(content);
+                    overlay.setPosition(coordinate);
+                    map.addOverlay(overlay);
+                }*/
             });
     })
 
