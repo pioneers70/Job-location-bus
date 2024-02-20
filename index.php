@@ -5952,9 +5952,9 @@
                 distance.addFeature(feature);
 
 
-                var iconFeatures = [];
-                var labelFeatures = [];
-                var iconSource, labelSource;
+                let iconFeatures = [];
+                let labelFeatures = [];
+                let iconSource, labelSource;
                 let busFeatures = [];
                 let iconBusSource;
 
@@ -6141,10 +6141,9 @@
                 });
 
                 /**  всплывающее окно---------------------------------------------------------------------------------*/
-
-                var container = document.getElementById("popup");
-                var content = document.getElementById("popup-content");
-                var popupCloser = document.getElementById("popup-closer");
+                let container = document.getElementById("popup");
+                let content = document.getElementById("popup-content");
+                let popupCloser = document.getElementById("popup-closer");
 
                 let overlay = new ol.Overlay({
                     element: container,
@@ -6165,7 +6164,7 @@
                     content.innerHTML = '<p>Остановка: <span style="font-weight: bold;">' + name + '</span></p>' +
                         '<p>Время прибытия: <span style="color: blue; font-weight: bold"> ' + timearrString + '</span></p>' +
                         '<p>Время отправки: <span style="color: green; font-weight: bold"> ' + timedepString + '</span></p>' +
-                        '<p>Время стоянки: <span style="color: red; font-weight: bold">' + timestop + ' минут</span></p>';
+                        '<p>Время стоянки:<span style="color: red; font-weight: bold">' + timestop + ' минут</span></p>';
 
                     overlay.setElement(content);
                     overlay.setPosition(coordinate);
@@ -6205,18 +6204,6 @@
                 popupCloser.addEventListener('click', function () {
                     overlay.setPosition(undefined);
                 });
-
-/*                function handleBusMarkerClick(feature, e) {
-                    let coordinate = e.coordinate;
-                    let name = feature.get('name');
-                    // Добавьте необходимые данные для отображения
-                    let content = document.createElement('div');
-                    content.innerHTML = '<p>Автобус: <span style="font-weight: bold;">' + name + '</span></p>' +
-                        // Добавьте остальные данные
-                        overlay.setElement(content);
-                    overlay.setPosition(coordinate);
-                    map.addOverlay(overlay);
-                }*/
             });
     })
 
