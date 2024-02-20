@@ -5945,7 +5945,7 @@
                 let busFeatures = [];
                 let iconBusSource;
 
-                let posbus = [{name: '619', cords: [92.0536783225959, 56.2197483205748]}];
+                let posbus = [{name: '619 Красноярск - Кызыл', cords: [92.0536783225959, 56.2197483205748]}];
 
                 /** Отрисовка позиции автобуса ---------------------------------------------------------------------- */
 
@@ -6156,7 +6156,7 @@
                 function handleBusPixelClick(feature, e) {
                     let coordinate = e.coordinate;
                     let name = feature.get('name');
-                    content.innerHTML = '<p>Автобус: <span style="font-weight: bold;">' + name + '</span></p>' +
+                    content.innerHTML = '<p>Автобус: <span style="font-weight: bold;">' + name + '</span></p>';
 
                     overlay.setPosition(coordinate);
                 }
@@ -6169,7 +6169,7 @@
                 map.on('click', function (e) {
                     let pixel = map.getEventPixel(e.originalEvent);
                     map.forEachFeatureAtPixel(pixel, function (feature) {
-                        if (feature.get('id') && feature.get('id').startsWith('bus')) {
+                        if (feature.get('id').startsWith('bus')) {
                             handleBusPixelClick(feature, e);
                         } else {
                             handleStopPixelClick(feature, e);
