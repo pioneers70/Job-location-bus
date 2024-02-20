@@ -10,19 +10,6 @@
 
 <script src="mapscript.js"></script>
 <script>
-    /*
-        async function getposition(){
-            let response;
-            response = await fetch('getdata.php');
-            // var response = await fetch('getdata.php');
-            if (response.ok) {
-                const data = await response.json();
-                return data;
-            } else {
-           console.error('Ошибка при получении данных:')
-            }
-        }
-    */
 
     $(document).ready(function () {
 
@@ -6150,7 +6137,7 @@
                     autoPan: true
                 });
 
-// Функция для обработки кликов на пиксели с информацией об остановке
+
                 function handleStopPixelClick(feature, e) {
                     let coordinate = e.coordinate;
                     let name = feature.get('name');
@@ -6159,31 +6146,25 @@
                     let timearr = timeToMinutes(timearrString);
                     let timedep = timeToMinutes(timedepString);
                     let timestop = timedep - timearr;
-
-                    let content = document.createElement('div');
                     content.innerHTML = '<p>Остановка: <span style="font-weight: bold;">' + name + '</span></p>' +
                         '<p>Время прибытия: <span style="color: blue; font-weight: bold"> ' + timearrString + '</span></p>' +
                         '<p>Время отправки: <span style="color: green; font-weight: bold"> ' + timedepString + '</span></p>' +
                         '<p>Время стоянки:<span style="color: red; font-weight: bold">' + timestop + ' минут</span></p>';
-
-                    overlay.setElement(content);
                     overlay.setPosition(coordinate);
-                    map.addOverlay(overlay);
                 }
 
-// Функция для обработки кликов на пиксели с информацией об автобусе
                 function handleBusPixelClick(feature, e) {
                     let coordinate = e.coordinate;
                     let name = feature.get('name');
-
-                    let content = document.createElement('div');
                     content.innerHTML = '<p>Автобус: <span style="font-weight: bold;">' + name + '</span></p>' +
-                        // Добавьте другую информацию об автобусе, если необходимо
-                        overlay.setElement(content);
+
                     overlay.setPosition(coordinate);
-                    map.addOverlay(overlay);
                 }
 
+                function timeToMinutes(timeString) {
+                    const [day, month, year, hours, minutes] = timeString.split(/[\s.:]+/);
+                    return parseInt(hours) * 60 + parseInt(minutes);
+                }
 
                 map.on('click', function (e) {
                     let pixel = map.getEventPixel(e.originalEvent);
@@ -6194,12 +6175,8 @@
                             handleStopPixelClick(feature, e);
                         }
                     });
+                    map.addOverlay(overlay);
                 });
-                function timeToMinutes(timeString) {
-                    const [day, month, year, hours, minutes] = timeString.split(/[\s.:]+/);
-                    return parseInt(hours) * 60 + parseInt(minutes);
-                }
-
 
                 popupCloser.addEventListener('click', function () {
                     overlay.setPosition(undefined);
