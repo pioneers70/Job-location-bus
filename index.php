@@ -6144,13 +6144,21 @@
                     let name = feature.get('name');
                     let timearrString = feature.get('timearr');
                     let timedepString = feature.get('timesend');
-                    let timearr = timeToMinutes(timearrString);
-                    let timedep = timeToMinutes(timedepString);
-                    let timestop = timedep - timearr;
-                    content.innerHTML = '<p>Остановка: <span style="font-weight: bold;">' + name + '</span></p>' +
-                        '<p>Время прибытия: <span style="color: blue; font-weight: bold"> ' + timearrString + '</span></p>' +
-                        '<p>Время отправки: <span style="color: green; font-weight: bold"> ' + timedepString + '</span></p>' +
-                        '<p>Время стоянки:<span style="color: red; font-weight: bold">' + timestop + ' минут</span></p>';
+                    let contentHTML = '<p>Остановка: <span style="font-weight: bold;">' + name + '</span></p>';
+                    if (timearrString) {
+                        contentHTML += '<p>Время прибытия: <span style="color: blue; font-weight: bold">' + timearrString + '</span></p>';
+                    } else {
+                        contentHTML += '<p>Автобус остановку не совершал в данном пункте</p>';
+                    }
+                    if (timedepString) {
+                        let timearr = timeToMinutes(timearrString);
+                        let timedep = timeToMinutes(timedepString);
+                        let timestop = timedep - timearr;
+
+                        contentHTML += '<p>Время отправки: <span style="color: green; font-weight: bold">' + timedepString + '</span></p>' +
+                            '<p>Время стоянки:<span style="color: red; font-weight: bold">' + timestop + ' минут</span></p>';
+                    }
+                    content.innerHTML = contentHTML;
                     overlay.setPosition(coordinate);
                 }
 
@@ -6163,7 +6171,7 @@
                 }
 
                 function timeToMinutes(timeString) {
-                    const [day, month, year, hours, minutes] = timeString.split(/[\s.:]+/);
+                    const [hours, minutes] = timeString.split(/[\s.:]+/);
                     return parseInt(hours) * 60 + parseInt(minutes);
                 }
 
