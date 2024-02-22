@@ -20,15 +20,27 @@
         /** Координаты остановок и сами остановки ------------------------------------------------------------------ */
 
         let pointsStation = [];
-        Swal.fire({
-            title: 'Загрузка данных',
-            text: 'Пожалуйста ожидайте, выполняется загрузка данных о рейсе',
-            icon: 'info',
+        Swal.mixin({
+            customClass: {
+                confirmButton: 'btn btn-primary',
+                cancelButton: 'btn btn-outline-danger'
+            },
+            buttonsStyling: false
+        }).fire({
+            html: '<div class="loading-wave">' +
+                '<div class="loading-bar"></div>' +
+                '<div class="loading-bar"></div>' +
+                '<div class="loading-bar"></div>' +
+                '<div class="loading-bar"></div>' +
+                '</div>',
+            title: 'Пожалуйста, ожидайте, выполняется загрузка данных о рейсе',
+            text: 'Пожалуйста, ожидайте, выполняется загрузка данных о рейсе',
+            showConfirmButton: false,
             allowOutsideClick: false,
             onBeforeOpen: () => {
                 Swal.showLoading();
             }
-        })
+        });
         fetch('getdata.php')
             .then(async response => await response.json())
             .then(async data => {
@@ -5986,7 +5998,7 @@
 
 
                 /** отрисовка иконки остановки -----------------------------------------------------------------------*/
-
+                let timestop;
                 function addMarkerStations() {
                     for (var j = 0; j < pointsStation.length; j++) {
                         var iconFeature = new ol.Feature({
@@ -5996,13 +6008,25 @@
                             timesend: pointsStation[j].timesend,
                             id: 'station-' + pointsStation[j].id
                         });
-                        var iconStyle = new ol.style.Style({
-                            image: new ol.style.Icon({
-                                scale: 0.28,
-                                opacity: 0.8,
-                                src: "https://school.stnorbert.org/wp-content/uploads/2018/01/bus-stop-filled-100.png"
-                            })
-                        });
+                        let iconStyle;
+                        if (pointsStation[j].timesend && pointsStation[j].timearr) {
+                            iconStyle = new ol.style.Style({
+                                image: new ol.style.Icon({
+                                    scale: 0.28,
+                                    opacity: 0.9,
+                                    src: "https://upload.wikimedia.org/wikipedia/commons/9/97/GO_bus_symbol.svg"
+                                })
+                            });
+                        } else {
+                            iconStyle = new ol.style.Style({
+                                image: new ol.style.Icon({
+                                    scale: 0.28,
+                                    opacity: 0.8,
+                                    src: "https://school.stnorbert.org/wp-content/uploads/2018/01/bus-stop-filled-100.png"
+                                })
+                            });
+                        }
+
                         iconFeature.setStyle([iconStyle]);
                         iconFeatures.push(iconFeature);
                     }
@@ -6166,6 +6190,7 @@
                         let timearr = timeToMinutes(timearrString);
                         let timedep = timeToMinutes(timedepString);
                         let timestop = timedep - timearr;
+                        // return timestop;
 
                         contentHTML += '<p>Время отправки: <span style="color: green; font-weight: bold">' + timedepString + '</span></p>' +
                             '<p>Время стоянки:<span style="color: red; font-weight: bold">' + timestop + ' минут</span></p>';
@@ -6212,6 +6237,12 @@
 <div id="popup" class="ol-popup">
     <a href="#" id="popup-closer" class="ol-popup-closer"></a>
     <div id="popup-content"></div>
+</div>
+<div class="loading-wave">
+    <div class="loading-bar"></div>
+    <div class="loading-bar"></div>
+    <div class="loading-bar"></div>
+    <div class="loading-bar"></div>
 </div>
 </body>
 </html>
