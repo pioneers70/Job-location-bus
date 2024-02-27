@@ -6009,7 +6009,7 @@
                             id: 'station-' + pointsStation[j].id
                         });
                         let iconStyle;
-                        if (pointsStation[j].timesend && pointsStation[j].timearr) {
+                        if (pointsStation[j].timesend && pointsStation[j].timearr) { //если станцию посещал
                             iconStyle = new ol.style.Style({
                                 image: new ol.style.Icon({
                                     scale: 0.28,
@@ -6018,7 +6018,7 @@
                                 })
                             });
                         } else {
-                            iconStyle = new ol.style.Style({
+                            iconStyle = new ol.style.Style({ //если не останавливался
                                 image: new ol.style.Icon({
                                     scale: 0.28,
                                     opacity: 0.8,
