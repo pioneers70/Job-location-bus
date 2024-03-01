@@ -20,6 +20,7 @@
         /** Координаты остановок и сами остановки ------------------------------------------------------------------ */
 
         let pointsStation = [];
+        let track = [];
         Swal.mixin({
             customClass: {
                 confirmButton: 'btn btn-primary',
@@ -45,7 +46,8 @@
             .then(async response => await response.json())
             .then(async data => {
                 Swal.close();
-                data.forEach(point => {
+                console.log(data);
+                data.datapoint.forEach(point => {
                     let newPoint = {
                         id: point.idstation,
                         name: point.stationName,
@@ -55,7 +57,12 @@
                     };
                     pointsStation.push(newPoint);
                 });
-                // console.log(pointsStation);
+                data.pointtrip.forEach(pointtr => {
+                    let trackpoint = {
+                        points: [pointtr.longtrip, pointtr.latitrip]
+                    };
+                    track.push(trackpoint);
+                });
                 while (true) {
                     if (pointsStation.length > 0) {
                         console.log('Массив pointsStation заполнен', pointsStation);
@@ -5963,7 +5970,6 @@
                 );
                 distance.addFeature(feature);
 
-
                 let iconFeatures = [];
                 let labelFeatures = [];
                 let iconSource, labelSource;
@@ -5999,6 +6005,7 @@
 
                 /** отрисовка иконки остановки -----------------------------------------------------------------------*/
                 let timestop;
+
                 function addMarkerStations() {
                     for (var j = 0; j < pointsStation.length; j++) {
                         var iconFeature = new ol.Feature({
