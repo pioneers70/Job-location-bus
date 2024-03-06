@@ -1,8 +1,8 @@
 
 <?php
 ini_set("soap.wsdl_cache_enabled","0");
-$client = new SoapClient("http://192.168.2.82:14051/wsdl/ISoapAppSrv");
-$IdTrip = 1626232;
+$client = new SoapClient("http://80.65.28.9:14051/wsdl/ISoapAppSrv"); //80.65.28.9
+$IdTrip = 1669478;
 //$IdTrip = 1663785;
 $res = $client->krsGetTripRes(25346, 'Sf$qW5v_', $IdTrip);
 $restrip = $client->krsGetTripCoord(25346, 'Sf$qW5v_', $IdTrip,0);
@@ -12,28 +12,11 @@ function showinf($data): void
 {
     echo '<pre>' . print_r($data, 1) . '</pre>';
 }
-
-/*$stationName = array();
-foreach ($res->TripPointArr as $namestop) {
-    $stationName[] = $namestop->StationNm;
-}
-$stlongitudearr = array();
-foreach ($res->TripPointArr as $stlongitude) {
-    $stlongitudearr[] = $stlongitude->StLONGITUDE;
-}
-$stlatitudearr = array();
-foreach ($res->TripPointArr as $stlatitude) {
-    $stlatitudearr[] = $stlatitude->StLATITUDE;
-}
-$timearrftarr= array();
-foreach ($res->TripPointArr as $timearrft) {
-    $timearrftarr[] = $timearrft->DtTmArrivalFt;
-}
-$timedepftarr = array();
-foreach ($res->TripPointArr as $timedepft) {
-    $timedepftarr[] = $timedepft->DtTmSendFt;
-}*/
-
+$buspos = array ();
+    $buspos[] = array(
+        'buslongitude' => $res->LONGITUDE,
+        'buslatitude' => $res->LATITUDE
+    );
 $geodata = array ();
 foreach ($res->TripPointArr as $point) {
     $geodata[] = array(
@@ -58,7 +41,8 @@ foreach ($restrip as $pointtrip)
 };
 $geodataall = array(
     'datapoint'=>$geodata,
-    'pointtrip' => $geodatatrip
+    'pointtrip' => $geodatatrip,
+    'busposition' => $buspos
 );
 //showinf($geodataall);
 //showinf($geodata);

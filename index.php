@@ -21,6 +21,7 @@
 
         let pointsStation = [];
         let track = [];
+        let busposition = []
         Swal.mixin({
             customClass: {
                 confirmButton: 'btn btn-primary',
@@ -63,9 +64,15 @@
                     };
                     track.push(trackpoint);
                 });
+                data.busposition.forEach(geobus => {
+                    let buscoord = {
+                        cords: [geobus.buslongitude, geobus.buslatitude]
+                    };
+                    busposition.push(buscoord);
+                });
                 while (true) {
                     if (pointsStation.length > 0) {
-                        console.log('Массив pointsStation заполнен', pointsStation);
+                        console.log('Массив pointsStation заполнен', pointsStation, track);
                         break;
                     } else {
                         console.log('Массив пуст. ожидайте..')
@@ -91,11 +98,9 @@
                     routePoints.push(ol.proj.fromLonLat(point.points));
                 });
                 var routeLine = new ol.geom.LineString(routePoints);
-
                 var routeFeature = new ol.Feature({
                     geometry: routeLine
                 });
-
                 routeFeature.setStyle(new ol.style.Style({
                     fill: new ol.style.Fill({color: '#6A5ACD', weight: 1}),
                     stroke: new ol.style.Stroke({color: '#6A5ACD', width: 3})
@@ -563,11 +568,12 @@
                 /** Отрисовка позиции автобуса ---------------------------------------------------------------------- */
 
                 function addMarkerBus() {
-                    for (let j = 0; j < posbus.length; j++) {
+                    for (let j = 0; j < busposition.length; j++) {
                         let busFeature = new ol.Feature({
-                            geometry: new ol.geom.Point(ol.proj.transform(posbus[j].cords, 'EPSG:4326', 'EPSG:3857')),
-                            name: posbus[j].name,
-                            id: 'bus' + posbus[j].id
+                            geometry: new ol.geom.Point(ol.proj.transform(busposition[j].cords, 'EPSG:4326', 'EPSG:3857')),
+                            name: busposition[j].name,
+                            id: 'bus' + busposition[j].id
+
                         });
                         let busStyle = new ol.style.Style({
                             image: new ol.style.Icon({
@@ -744,7 +750,6 @@
                     /**  renderer: 'canvas'---------------------------------------------------------------------------*/
 
                     view: new ol.View({
-
                         /** Координаты центра-------------------------------------------------------------------------*/
                         center: ol.proj.fromLonLat(busCoords),
                         zoom: 10,
