@@ -80,7 +80,7 @@
                     await new Promise(resolve => setTimeout(resolve, 5000));
                 }
 
-                function copyCord(vP, startP, endP) {
+/*                function copyCord(vP, startP, endP) {
                     let res = [];
                     let j = 0;
                     for (let i = startP; i < endP; i++) {
@@ -88,22 +88,21 @@
                         j++;
                     }
                     return res;
-                }
+                }*/
 
                 /** Точки прохождения всего маршрута и отрисовка его -------------------------------------------------*/
-
-                var vectorSource = new ol.source.Vector();
-                var routePoints = [];
+                let vectorSource = new ol.source.Vector();
+                let routePoints = [];
                 track.forEach(point => {
                     routePoints.push(ol.proj.fromLonLat(point.points));
                 });
-                var routeLine = new ol.geom.LineString(routePoints);
-                var routeFeature = new ol.Feature({
+                let routeLine = new ol.geom.LineString(routePoints);
+                let routeFeature = new ol.Feature({
                     geometry: routeLine
                 });
                 routeFeature.setStyle(new ol.style.Style({
-                    fill: new ol.style.Fill({color: '#6A5ACD', weight: 1}),
-                    stroke: new ol.style.Stroke({color: '#6A5ACD', width: 3})
+                    fill: new ol.style.Fill({color: '#6A5ACD', weight: 1.5}),
+                    stroke: new ol.style.Stroke({color: '#6A5ACD', width: 5})
                 }));
                 vectorSource.addFeature(routeFeature);
 
@@ -148,8 +147,8 @@
 
 
                 function addMarkerStations() {
-                    for (var j = 0; j < pointsStation.length; j++) {
-                        var iconFeature = new ol.Feature({
+                    for (let j = 0; j < pointsStation.length; j++) {
+                        let iconFeature = new ol.Feature({
                             geometry: new ol.geom.Point(ol.proj.transform(pointsStation[j].cords, 'EPSG:4326', 'EPSG:3857')),
                             name: pointsStation[j].name,
                             timearr: pointsStation[j].timearr,
@@ -157,16 +156,31 @@
                             id: 'station-' + pointsStation[j].id
                         });
                         let iconStyle;
-                        if (pointsStation[j].timesend && pointsStation[j].timearr) { //если станцию посещал
-                            iconStyle = new ol.style.Style({
-                                image: new ol.style.Icon({
-                                    scale: 0.28,
-                                    opacity: 0.9,
-                                    src: "https://upload.wikimedia.org/wikipedia/commons/9/97/GO_bus_symbol.svg"
-                                })
-                            });
+                        if (pointsStation[j].timesend && pointsStation[j].timearr) {
+                            let timearrMinutes = timeToMinutes(pointsStation[j].timearr);
+                            let timesendMinutes = timeToMinutes(pointsStation[j].timesend);
+                            let stopDuration = timesendMinutes - timearrMinutes;
+
+                            if (stopDuration > 0) {
+                                iconStyle = new ol.style.Style({
+                                    image: new ol.style.Icon({
+                                        scale: 0.25,
+                                        opacity: 1,
+                                        src: "https://upload.wikimedia.org/wikipedia/commons/9/97/GO_bus_symbol.svg"
+                                    })
+                                });
+                            } else {
+                                iconStyle = new ol.style.Style({
+                                    image: new ol.style.Icon({
+                                        scale: 0.2,
+                                        opacity: 0.7,
+                                        src: "https://upload.wikimedia.org/wikipedia/commons/9/97/GO_bus_symbol.svg"
+                                    })
+                                });
+                            }
                         } else {
-                            iconStyle = new ol.style.Style({ //если не останавливался
+                            // Если нет времени остановки, используем другую иконку
+                            iconStyle = new ol.style.Style({
                                 image: new ol.style.Icon({
                                     scale: 0.28,
                                     opacity: 0.8,
@@ -207,7 +221,7 @@
                                 textBaseline: 'bottom',
                                 textAlign: 'top',
                                 rotation: 0,
-                                offsetY: -8
+                                offsetY: -15
                             })
                         });
                         labelFeature.setStyle([labelStyle]);
@@ -239,7 +253,7 @@
 
                 let clusters = new ol.layer.Vector({
                     source: clusterSource,
-                    style: function (feature, resolution) {
+                    style: function (feature) {
                         let size = feature.get('features').length;
                         let style = styleCache[size];
                         if (!style && size >= 2) {
@@ -337,7 +351,6 @@
                         let timearr = timeToMinutes(timearrString);
                         let timedep = timeToMinutes(timedepString);
                         let timestop = timedep - timearr;
-                        // return timestop;
 
                         contentHTML += '<p>Время отправки: <span style="color: green; font-weight: bold">' + timedepString + '</span></p>' +
                             '<p>Время стоянки:<span style="color: red; font-weight: bold">' + timestop + ' минут</span></p>';
@@ -396,18 +409,13 @@
                 let moveMarker = function (event) {
                     let elapsedTime = event.frameState.time - startTime;
                     let index = Math.round(speed * elapsedTime / 1000);
-
                     if (index >= routePoints.length) {
                         return;
                     }
-
                     let currentPoint = routePoints[index];
                     marker.getGeometry().setCoordinates(currentPoint);
-
-                    // Continue the animation
                     map.render();
                     if (index === routePoints.length - 1) {
-                        // Animation complete
                         map.un('postcompose', moveMarker);
                     }
                 };
