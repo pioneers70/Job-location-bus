@@ -290,10 +290,10 @@
                             source: labelSource,
                             name: 'labelStations'
                         }),
-/*                        new ol.layer.Vector({
-                            source: distance,
-                            name: 'distance'
-                        }),*/
+                        /*                        new ol.layer.Vector({
+                                                    source: distance,
+                                                    name: 'distance'
+                                                }),*/
                         new ol.layer.Vector({
                             source: iconBusSource,
                             name: 'iconBusSource'
@@ -377,34 +377,35 @@
                 popupCloser.addEventListener('click', function () {
                     overlay.setPosition(undefined);
                 });
-                var speed = 200; // pixels per second
-                var marker = new ol.Feature({
+                /** Анимация маркера ---------------------------------------------------------------------------*/
+                let speed = 200; // pixels per second
+                let marker = new ol.Feature({
                     geometry: new ol.geom.Point(routePoints[0])
                 });
-                var markerStyle = new ol.style.Style({
-                    image: new ol.style.Circle({
-                        radius: 7,
-                        fill: new ol.style.Fill({color: 'red'})
+                let markerStyle = new ol.style.Style({
+                    image: new ol.style.Icon({
+                        scale: 0.5,
+                        opacity: 0.9,
+                        src: "https://cdn1.ozonusercontent.com/s3/marketing-api/banners/em/ew/c96/emewn0ujuN78mxqrY0ihpjaY6RjKqA0N.png"
                     })
                 });
                 marker.setStyle(markerStyle);
                 vectorSource.addFeature(marker);
 
-                var startTime = Date.now();
-                var moveMarker = function(event) {
-                    var elapsedTime = event.frameState.time - startTime;
-                    var index = Math.round(speed * elapsedTime / 1000);
+                let startTime = Date.now();
+                let moveMarker = function (event) {
+                    let elapsedTime = event.frameState.time - startTime;
+                    let index = Math.round(speed * elapsedTime / 1000);
 
                     if (index >= routePoints.length) {
                         return;
                     }
 
-                    var currentPoint = routePoints[index];
+                    let currentPoint = routePoints[index];
                     marker.getGeometry().setCoordinates(currentPoint);
 
                     // Continue the animation
                     map.render();
-
                     if (index === routePoints.length - 1) {
                         // Animation complete
                         map.un('postcompose', moveMarker);
