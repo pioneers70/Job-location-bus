@@ -2,7 +2,7 @@
 <?php
 ini_set("soap.wsdl_cache_enabled","0");
 $client = new SoapClient("http://80.65.28.9:14051/wsdl/ISoapAppSrv"); //80.65.28.9
-$IdTrip = 1669478;
+$IdTrip = 1626232;
 //$IdTrip = 1663785;
 $res = $client->krsGetTripRes(25346, 'Sf$qW5v_', $IdTrip);
 $restrip = $client->krsGetTripCoord(25346, 'Sf$qW5v_', $IdTrip,0);

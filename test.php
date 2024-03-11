@@ -10,8 +10,9 @@ $res = $client->krsGetTripRes(25346, 'Sf$qW5v_', $IdTrip);
 $restrip = $client->krsGetTripCoord(25346, 'Sf$qW5v_', $IdTrip,0);
 
 
-//$res = $client->krsGetTrips(25346, 1, 15,'6.03.2024'); // для получения Id
-showinf($restrip);
+$resid = $client->krsGetTrips(25346, 1, 15,'7.03.2024'); // для получения Id
+showinf($resid);
+//showinf($restrip);
 function showinf($data): void
 {
     echo '<pre>' . print_r($data, 1) . '</pre>';
