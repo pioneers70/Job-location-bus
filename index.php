@@ -82,15 +82,15 @@
                     await new Promise(resolve => setTimeout(resolve, 5000));
                 }
 
-/*                function copyCord(vP, startP, endP) {
-                    let res = [];
-                    let j = 0;
-                    for (let i = startP; i < endP; i++) {
-                        res[j] = ol.proj.transform(vP[i], 'EPSG:4326', 'EPSG:3857');
-                        j++;
-                    }
-                    return res;
-                }*/
+                /*                function copyCord(vP, startP, endP) {
+                                    let res = [];
+                                    let j = 0;
+                                    for (let i = startP; i < endP; i++) {
+                                        res[j] = ol.proj.transform(vP[i], 'EPSG:4326', 'EPSG:3857');
+                                        j++;
+                                    }
+                                    return res;
+                                }*/
 
                 /** Точки прохождения всего маршрута и отрисовка его -------------------------------------------------*/
                 let vectorSource = new ol.source.Vector();
