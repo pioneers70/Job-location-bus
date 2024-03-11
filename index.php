@@ -54,6 +54,8 @@
                         name: point.stationName,
                         timearr: point.timearrft,
                         timesend: point.timesendft,
+                        timearrplan: point.timearrpl,
+                        timesendplan: point.timesendpl,
                         cords: [point.longitude, point.latitude]
                     };
                     pointsStation.push(newPoint);
@@ -341,6 +343,8 @@
                     let name = feature.get('name');
                     let timearrString = feature.get('timearr');
                     let timedepString = feature.get('timesend');
+                    let timearrplString = feature.get('timearrplan');
+                    let timedepplString = feature.get('timesendplan');
                     let contentHTML = '<p>Остановка: <span style="font-weight: bold;">' + name + '</span></p>';
                     if (timearrString) {
                         contentHTML += '<p>Время прибытия: <span style="color: blue; font-weight: bold">' + timearrString + '</span></p>';
